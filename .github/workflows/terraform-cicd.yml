@@ -134,6 +134,6 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve -input=false -lock-timeout=300s tfplan
+        run: terraform apply -auto-approve 
         # working-directory: ${{ env.TF_WORKING_DIR }}
       
