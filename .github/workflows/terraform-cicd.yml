@@ -80,8 +80,8 @@ jobs:
         # run: terraform plan -out=tfplan -no-color -input=false -lock-timeout=300s
         run: |
             terraform plan -no-color -out=tfplan 2>&1 | tee plan_output.txt
-        working-directory: environments/prod
-        continue-on-error: true
+        working-directory: .
+        continue-on-error: false
 
       - name: Format Plan Output
         id: format_plan
