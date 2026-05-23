@@ -14,7 +14,7 @@ env:
   TF_LOG: INFO
   TF_LOG_PATH: terraform.log
   TF_VERSION: 1.13.3 
-  TF_WORKING_DIR: ./infra
+#   TF_WORKING_DIR: ./infra
   AWS_REGION: us-east-1
 
  
@@ -32,9 +32,9 @@ jobs:
   formatting-validate-linting:
     runs-on: ubuntu-latest
     name: 'Formatting, Linting, and Validation'
-    defaults:
-      run:
-        working-directory: ${{ env.TF_WORKING_DIR }}
+    # defaults:
+    #   run:
+    #     working-directory: ${{ env.TF_WORKING_DIR }}
     steps:
       - name: Checkout code
         id: checkout
@@ -75,7 +75,7 @@ jobs:
       - name: Generate Terraform Plan
         id: plan
         run: terraform plan -out=tfplan -no-color -input=false -lock-timeout=300s
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        # working-directory: ${{ env.TF_WORKING_DIR }}
     
     
   
@@ -113,9 +113,9 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Terraform Apply'
     needs: plan-manual-approval    
-    defaults:
-      run:
-        working-directory: ${{ env.TF_WORKING_DIR }}
+    # defaults:
+    #   run:
+    #     working-directory: ${{ env.TF_WORKING_DIR }}
     steps:      
       - name: Checkout code
         uses: actions/checkout@v4
@@ -135,5 +135,5 @@ jobs:
       - name: Terraform Apply
         id: apply
         run: terraform apply -auto-approve -input=false -lock-timeout=300s tfplan
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        # working-directory: ${{ env.TF_WORKING_DIR }}
       
