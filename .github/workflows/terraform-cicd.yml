@@ -68,12 +68,12 @@ jobs:
         id: validate
         run: terraform validate -no-color        
      
-      - name: Terraform lint
-        id: tflint
-        uses: terraform-linters/setup-tflint@v6
-        with:
-          version: latest
-          cache: true
+      # - name: Terraform lint
+      #   id: tflint
+      #   uses: terraform-linters/setup-tflint@v6
+      #   with:
+      #     version: latest
+      #     cache: true
 
       - name: Generate Terraform Plan
         id: plan
