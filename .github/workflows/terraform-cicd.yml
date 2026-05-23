@@ -21,7 +21,7 @@ env:
   TF_LOG_PATH: terraform.log
   TF_VERSION: 1.13.3 
   AWS_REGION: us-east-1
-  WORKING_DIR: environments/prod
+  WORKING_DIR: .
 
  
 permissions:
@@ -68,16 +68,9 @@ jobs:
         id: validate
         run: terraform validate -no-color        
      
-      # - name: Terraform lint
-      #   id: tflint
-      #   uses: terraform-linters/setup-tflint@v6
-      #   with:
-      #     version: latest
-      #     cache: true
-
+      
       - name: Generate Terraform Plan
-        id: plan
-        # run: terraform plan -out=tfplan -no-color -input=false -lock-timeout=300s
+        id: plan        
         run: |
             terraform plan -no-color -out=tfplan 2>&1 | tee plan_output.txt
         working-directory: .
@@ -114,9 +107,9 @@ jobs:
         secret: ${{ github.TOKEN }}
         approvers: kodcapsule
         minimum-approvals: 1
-        issue-title: "Deploying v1.3. to prod from staging"
+        issue-title: "Deploying v1.1 to prod from staging"
         issue-body: |
-            Please approve or deny the deployment of version v1.3.5.
+            Please approve or deny the deployment of version v1.1.
 
             ## Terraform Plan Output
             <details>
@@ -125,7 +118,11 @@ jobs:
             **To approve:** comment `approved`
             **To deny:** comment `denied`
             </details>
-# #####################################
+
+
+#######################################################
+  #  Apply Terraform Plan to deploy infrastructure
+######################################################  
 
   deploy-infrastructure:
     runs-on: ubuntu-latest
