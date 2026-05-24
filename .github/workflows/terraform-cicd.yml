@@ -33,7 +33,7 @@ permissions:
 jobs:
 
 #####################################
-  #  Format/lint & Validation
+  #  Format , Validation & Linting 
 #####################################
   formatting-validate-linting:
     runs-on: ubuntu-latest
@@ -68,6 +68,22 @@ jobs:
         id: validate
         run: terraform validate -no-color        
      
+      - name: Set up TFLint
+        uses: terraform-linters/setup-tflint@v6
+        with:
+         tflint_version: v0.52.0
+         cache: true
+      - name: Show version
+        run: tflint --version
+
+      - name: Init TFLint
+        run: tflint --init
+        env:        
+         GITHUB_TOKEN: ${{ github.token }}
+         
+      - name: Run TFLint
+        run: tflint -f compact
+
       
       - name: Generate Terraform Plan
         id: plan        
@@ -86,6 +102,63 @@ jobs:
             echo "$PLAN" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
     
+
+
+
+
+#####################################################
+  #  Security checks and scanning for vulnerabilities
+#####################################################
+  security-scan:
+    runs-on: ubuntu-latest
+    name: 'Security Scanning' 
+    needs: formatting-validate-linting
+    steps:
+      - name: Checkout code
+        id: checkout
+        uses: actions/checkout@v2      
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5.1.0
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: GitHubActions
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Run tfsec security scan
+        uses: triat/terraform-security-scan@v3
+        id: tfsec
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Checkov action
+        uses: bridgecrewio/checkov-action@master
+        id: checkov
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          directory: .            # Folder containing .tf files
+          framework: terraform             # Specific IaC framework
+          soft_fail: false                  # Set to true to allow pipeline to continue on failure
+          output_format: cli 
+
+      - name: Run Trivy Terraform Scan
+        uses: aquasecurity/trivy-action@v0.36.0
+        id: trivy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          scan-type: terraform
+          severity: HIGH,CRITICAL
+          format: table
+          output: trivy_report.txt
+      
+
+        
     
   
 #####################################
