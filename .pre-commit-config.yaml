@@ -1,0 +1,14 @@
+repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.96.1 # Use latest version
+    hooks:
+      - id: terraform_fmt       # Rewrites files to canonical format
+      - id: terraform_validate  # Validates syntax and internal consistency
+      - id: terraform_docs      # Automatically updates README with variables/outputs
+      # - id: terraform_tflint    # Finds potential errors and best practice violations
+      # - id: terraform_checkov   # Scans for security vulnerabilities
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.17.0 # Use latest version
+    hooks:
+        - id: gitleaks
+          
