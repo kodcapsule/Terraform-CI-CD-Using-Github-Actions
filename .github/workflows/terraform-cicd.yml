@@ -80,7 +80,7 @@ jobs:
         run: tflint --init
         env:        
          GITHUB_TOKEN: ${{ github.token }}
-         
+
       - name: Run TFLint
         run: tflint -f compact
 
@@ -112,7 +112,6 @@ jobs:
   security-scan:
     runs-on: ubuntu-latest
     name: 'Security Scanning' 
-    needs: formatting-validate-linting
     steps:
       - name: Checkout code
         id: checkout
