@@ -5,9 +5,11 @@ on:
   push:    
     branches:
       - main
-    paths-ignore:
-    - 'README.md'
-    - '.md'
+    # paths-ignore:
+    # - 'README.md'
+    # - '.md'
+    paths:
+    - '*'
   pull_request:
     branches:
       - main  
@@ -38,6 +40,8 @@ jobs:
   formatting-validate-linting:
     runs-on: ubuntu-latest
     name: 'Formatting, Linting, and Validation' 
+    outputs:
+      plan_content: ${{ steps.format_plan.outputs.plan_result }}
     steps:
       - name: Checkout code
         id: checkout
@@ -99,9 +103,9 @@ jobs:
            # Truncate if too long (GitHub issue body limit is 65536 chars)
            PLAN=$(cat plan_output.txt | head -c 50000)
            # Save as multiline env var
-            echo "PLAN<<EOF" >> $GITHUB_ENV
-            echo "$PLAN" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+            echo "plan_result<<EOF" >> $GITHUB_OUTPUT
+            echo "$PLAN" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
     
 
 
@@ -191,7 +195,7 @@ jobs:
             ## Terraform Plan Output
             <details>
             <summary>Click here to expand</summary>
-            ${{ env.GITHUB_ENV }}
+            \${{ needs.formatting-validate-linting.outputs.plan_content }}
             **To approve:** comment `approved`
             **To deny:** comment `denied`
             </details>
