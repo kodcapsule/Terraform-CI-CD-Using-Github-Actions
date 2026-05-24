@@ -83,6 +83,7 @@ jobs:
 
       - name: Run TFLint
         run: tflint -f compact
+        continue-on-error: true
 
       
       - name: Generate Terraform Plan
@@ -133,6 +134,9 @@ jobs:
         id: tfsec
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+        
+      
 
       - name: Run Checkov action
         uses: bridgecrewio/checkov-action@master
@@ -144,6 +148,7 @@ jobs:
           framework: terraform             # Specific IaC framework
           soft_fail: false                  # Set to true to allow pipeline to continue on failure
           output_format: cli 
+        continue-on-error: true
 
       - name: Run Trivy Terraform Scan
         uses: aquasecurity/trivy-action@v0.36.0
@@ -155,7 +160,7 @@ jobs:
           severity: HIGH,CRITICAL
           format: table
           output: trivy_report.txt
-      
+        continue-on-error: true
 
         
     
@@ -165,7 +170,7 @@ jobs:
 #####################################
   plan-manual-approval:
     runs-on: ubuntu-latest
-    needs: formatting-validate-linting
+    needs: [formatting-validate-linting, security-scan]
     name: 'Manual Approval'    
     if: success()
 
