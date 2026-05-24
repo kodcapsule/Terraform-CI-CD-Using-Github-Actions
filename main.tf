@@ -26,3 +26,4 @@ module "devops-ec2" {
   source  = "kodcapsule/devops-ec2/aws"
   version = "1.0.0"
 }
+
