@@ -15,8 +15,7 @@ on:
       - main  
     paths-ignore:
     - 'README.md'
-    - '.md'    
-    
+    - '.md'     
 
 env:
   TF_LOG: INFO
