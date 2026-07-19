@@ -7,9 +7,9 @@ resource "aws_s3_bucket" "tfstate" {
   for_each = toset(local.envs)
   bucket   = "myapp-tfstate-${each.key}-101"
 
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_s3_bucket_versioning" "tfstate" {
