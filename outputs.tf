@@ -1,5 +1,5 @@
 output "instance_public_ip" {
-  value = module.devops-ec2.instance_public_ip
+  value = module.devops-ec2.ec2_instance_ip
 }
 
 
