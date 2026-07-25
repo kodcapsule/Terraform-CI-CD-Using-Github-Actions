@@ -10,3 +10,13 @@ module "s3-backend" {
   # insert the 1 required variable here
   bucket_name = "spain-0-2-argentina-dev-101"
 }
+
+# "token.actions.githubusercontent.com:sub": "repo:<OWNER>/<REPO_NAME>/ref:refs/heads/
+
+
+# "token.actions.githubusercontent.com:sub": [
+# 						"repo:kodecapsul/*",c
+# 						"repo:kodecapsul/*"
+# 					]
+
+#            "token.actions.githubusercontent.com:sub": "repo:kodcapsule/*"
